@@ -26,21 +26,25 @@ def peliculas_mes(mes):
     return {'mes':mes, 'cantidad':respuesta}
 @app.get('/peliculas_dia')
 def peliculas_dia(dia):
-    dias_semana = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
+    dias_semana = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
     dias_semana.sort()
     DF = pd.read_csv("movies_dataset.csv")
+    
     if dia not in dias_semana:
         return {'dia':"valor incorrecto. Ingrese un dia", 'cantidad':"Error"}
-    DF["release_date"] = pd.to_datetime(DF["release_date"],errors='coerce')
-
-    DF["dia_semana"] = DF["release_date"].dt.strftime("%A")
     
-    day_count = list(DF.dia_semana.value_counts().sort_index())
+    DF["release_date"] = pd.to_datetime(DF["release_date"], errors='coerce')
+    DF["dia_semana"] = DF["release_date"].dt.day_name(locale='es_ES')
 
+    # Ordenar los días de la semana
+    DF["dia_semana"] = DF["dia_semana"].astype(pd.CategoricalDtype(categories=dias_semana, ordered=True))
+
+    day_count = DF["dia_semana"].value_counts().sort_index().tolist()
+    
     indice = dias_semana.index(dia)
-
     respuesta = day_count[indice]
-    return {'dia':dia, 'cantidad':respuesta}
+    
+    return {'dia': dia, 'cantidad': respuesta}
 @app.get('/franquicia')
 
 def franquicia(franquicia):
