@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
 import re
-import locale
+
 from fastapi import FastAPI
-locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+
 app = FastAPI()
 @app.get('/peliculas_mes')
 
