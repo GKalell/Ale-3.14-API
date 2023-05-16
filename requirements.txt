@@ -19,4 +19,3 @@ pandas
 numpy
 locale
 re
-fastapi
